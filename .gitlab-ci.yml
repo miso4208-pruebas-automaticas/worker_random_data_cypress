@@ -1,22 +1,5 @@
-image: cypress/browsers:chrome67
-
-before_script:
-  - npm install
-
-stages:
-  - test
-
-cache:
-  key: ${CI_COMMIT_REF_SLUG}
-
-cypress:
-  stage: test
+image: cypress/base:10
+cypress-e2e:
   script:
-    #- npm run test
-    #- npm install cypress --save-dev
-    #- npm run test
-    - $(npm bin)/cypress run --browser chrome
-
-  artifacts:
-    paths:
-      - /cypress/videos/
+    - npm install
+    - $(npm bin)/cypress run
