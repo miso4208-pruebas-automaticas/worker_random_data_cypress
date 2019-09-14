@@ -1,4 +1,4 @@
-image: cypress/included:3.4.1
+image: node:10
 
 before_script:
   - npm install
@@ -12,7 +12,8 @@ cache:
 cypress:
   stage: test
   script:
-    - npm run test
+    #- npm run test
+    - cypress run
   artifacts:
     paths:
       - /cypress/videos/
