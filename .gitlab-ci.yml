@@ -13,7 +13,6 @@ cypress:
   stage: test
   script:
     #- npm run test
-    - yum install Xvfb
     - npm install cypress --save-dev
     - npx cypress run
   artifacts:
