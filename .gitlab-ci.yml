@@ -1,0 +1,13 @@
+image: node:10
+
+stages:
+  - test
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+
+test:
+  stage: test
+  script:
+    - npm install
+    - npx cypress run
