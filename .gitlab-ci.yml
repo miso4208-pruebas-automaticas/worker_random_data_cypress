@@ -1,4 +1,4 @@
-image: node:10
+image: cypress/include
 
 before_script:
   - npm install
@@ -8,8 +8,15 @@ stages:
 
 cache:
   key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - .npm
+    - cache/Cypress
+    - node_modules
 
-test:
+cypress:
   stage: test
   script:
     - npm run test
+  artifacts:
+    paths:
+      - /cypress/videos/
