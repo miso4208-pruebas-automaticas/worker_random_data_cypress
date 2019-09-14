@@ -15,6 +15,8 @@ cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
     - node_modules
+    - cache/Cypress
+
 
 # this job installs NPM dependencies and Cypress
 install:
@@ -22,12 +24,10 @@ install:
   stage: build
 
   script:
-    - npm ci
-    # show where the Cypress test runner binaries are cached
-    - $(npm bin)/cypress cache path
-    # show all installed versions of Cypress binary
-    - $(npm bin)/cypress cache list
-    - $(npm bin)/cypress verify
+    - 'export CYPRESS_CACHE_FOLDER=../../cache/Cypress'
+    - 'npm ci'
+    - 'export CYPRESS_CACHE_FOLDER=cache/Cypress'
+    - 'npm run ci'
 
 # two jobs that run after "install" job finishes
 # NPM dependencies and Cypress binary should be already installed
