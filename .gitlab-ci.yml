@@ -1,4 +1,4 @@
-image: cypress/base:10
+image: cypress/browsers:chrome67
 
 before_script:
   - npm install
@@ -15,8 +15,7 @@ cypress:
     #- npm run test
     #- npm install cypress --save-dev
     #- npm run test
-    - npm install
-    - $(npm bin)/cypress run
+    - $(npm bin)/cypress run --browser chrome
 
   artifacts:
     paths:
