@@ -9,8 +9,6 @@ stages:
 cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
-    - .npm
-    - cache/Cypress
     - node_modules
 
 cypress:
