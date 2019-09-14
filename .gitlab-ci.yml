@@ -1,7 +1,6 @@
-image: node:10
+image: cypress/base:10
 
 before_script:
-  - apt-get install xvfb libgtk-3-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2
   - npm install
 
 stages:
@@ -14,8 +13,11 @@ cypress:
   stage: test
   script:
     #- npm run test
-    - npm install cypress --save-dev
-    - npm run test
+    #- npm install cypress --save-dev
+    #- npm run test
+    - npm install
+    - $(npm bin)/cypress run
+
   artifacts:
     paths:
       - /cypress/videos/
