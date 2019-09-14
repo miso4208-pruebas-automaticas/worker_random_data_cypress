@@ -14,7 +14,7 @@ cypress:
   script:
     #- npm run test
     - npm install cypress --save-dev
-    - npx cypress run
+    - npm run test
   artifacts:
     paths:
       - /cypress/videos/
