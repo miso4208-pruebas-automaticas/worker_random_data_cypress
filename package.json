@@ -2,13 +2,23 @@
   "name": "workercypress",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
+    "start": "nodemon app.js",
     "test": "cypress run"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "cypress": "^3.4.1"
+    "cypress": "^3.4.1",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "http": "0.0.0",
+    "nodemon": "^1.19.2",
+    "path": "^0.12.7",
+    "request": "^2.88.0",
+    "shell-exec": "^1.0.2",
+    "shelljs": "^0.8.3"
   }
 }
