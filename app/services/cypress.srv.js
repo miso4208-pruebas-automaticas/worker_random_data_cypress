@@ -5,5 +5,5 @@ module.exports.generateCypress = function(req,success,error){
 
     shell.exec('npm install');
     shell.exec('npx cypress run');
-
+    
 }

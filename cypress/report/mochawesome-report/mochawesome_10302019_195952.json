@@ -1,0 +1,105 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 1,
+    "passes": 1,
+    "pending": 0,
+    "failures": 0,
+    "start": "2019-10-31T00:59:38.534Z",
+    "end": "2019-10-31T00:59:52.940Z",
+    "duration": 14406,
+    "testsRegistered": 1,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "7f7e166e-5ddb-43d9-bd97-8b58c4a05143",
+      "title": "",
+      "fullFile": "",
+      "file": "",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "ad209da7-d76e-48a3-b5ee-5a53478b34c3",
+          "title": "Habitica testing",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "Visits habitica and login",
+              "fullTitle": "Habitica testing Visits habitica and login",
+              "timedOut": null,
+              "duration": 11839,
+              "state": "passed",
+              "speed": "slow",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.visit('http://localhost:8080/static/home', {\n  onBeforeLoad: function onBeforeLoad(contentWindow) {\n    Object.defineProperty(navigator, 'language', {\n      value: 'es_ES'\n    });\n  }\n}); //cy.contains('Ingresar').click()\ncy.get('a[href=\"/login\"]').click();\ncy.get('#login-form').find('input[id=\"usernameInput\"]').click().type(\"fakeUser1@fake.com\");\ncy.get('#login-form').find('input[id=\"passwordInput\"]').click().type(\"pruebas201902\");\ncy.get('.btn-info').click();\n/*if(cy.get('button[type=\"submit\"]').should('exist')){\n  cy.get('button[type=\"submit\"]').click()\n  cy.get('.next').click()\n  cy.get('.footer .next').click()\n  cy.get('.introjs-button').click()\n}*/\ncy.get('div[aria-label=\"User\"]').should('exist'); //cy.contains('El correo y la contraseña que ingresaste no figuran en la base de datos. Intenta de nuevo por favor.')",
+              "err": {},
+              "uuid": "e5011c09-7f48-4b39-9e02-0ee3ceadb008",
+              "parentUUID": "ad209da7-d76e-48a3-b5ee-5a53478b34c3",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "e5011c09-7f48-4b39-9e02-0ee3ceadb008"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 11839,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "5.2.0"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": false,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false
+      },
+      "version": "4.1.0"
+    },
+    "marge": {
+      "options": {
+        "reportDir": "cypress/report/mochawesome-report",
+        "overwrite": true,
+        "html": false,
+        "json": true,
+        "timestamp": "mmddyyyy_HHMMss"
+      },
+      "version": "4.0.1"
+    }
+  }
+}
