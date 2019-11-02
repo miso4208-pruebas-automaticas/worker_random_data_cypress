@@ -18,4 +18,25 @@ router.get('/cypress',function(req,res){
     return res;
 });
 
+router.post('/cypress-generatedata',function(req,res){
+    
+    console.log("data: "+ JSON.stringify(req.body))
+    
+    let data={
+        'items' : req.body.items
+    }
+
+    cypressService.generateDynamicData(data,function(apps){
+        res.statusCode = 200;
+        res.send({ status: "OK", data:apps });
+    },function(err){
+        res.statusCode = 404;
+        res.send(err);
+
+    })
+
+    return res;
+});
+
+
 module.exports = router;

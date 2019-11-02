@@ -20,6 +20,8 @@ app.use( function (req, res, next) {
     next();
 });
 
-app.listen(port, () => {
+var server =  app.listen(port, () => {
   console.log('Worker cypress listening on ' + port);
 });
+
+server.timeout = 5000000
