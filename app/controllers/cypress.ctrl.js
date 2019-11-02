@@ -4,21 +4,7 @@ var router = express.Router();
 var cypressService = require('../services/cypress.srv.js');
 var http = require('http');
 
-router.get('/cypress',function(req,res){
-    
-    cypressService.generateCypress(function(apps){
-        res.statusCode = 200;
-        res.send({ status: "OK" });
-    },function(err){
-        res.statusCode = 404;
-        res.send(err);
-
-    })
-
-    return res;
-});
-
-router.post('/cypress-generatedata',function(req,res){
+router.post('/cypress_random_data',function(req,res){
     
     console.log("data: "+ JSON.stringify(req.body))
     

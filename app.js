@@ -7,7 +7,7 @@ const app = express();
 
 var cypressController = require('./app/controllers/cypress.ctrl.js');
 
-const port = 8004;
+const port = 8007;
 
 app.options('*', cors());
 app.use(cors());
