@@ -3,6 +3,7 @@ const shell = require('shelljs');
 var http = require('http');
 const request = require('request');
 const fs = require('fs');
+const s3 = require('../../worker-sqs/s3Storage.js')
 
 module.exports.generateCypress = function(req,success,error){
 
@@ -13,18 +14,39 @@ module.exports.generateCypress = function(req,success,error){
 
 module.exports.generateDynamicData = function(req,success,error){
     shell.exec('npm install');  
-    let items = req.items;
+    let itemsEx = req.numberExecution;
+    let path = req.path_project;
+    let code = req.code;
+    const codeinit = req.code;
     var item = 1;
-    for(var i = 0,p = Promise.resolve();i<items;i++){
+    for(var i = 0,p = Promise.resolve();i<itemsEx;i++){
         p= p.then(_ => new Promise(resolve => {
-        requestcall().then(()=>{
-                shell.exec('npx cypress run', function(code, stdout, stderr) {
-                    console.log("--- "+ item + "items " +items);
-                    if(item == items){
-                        success("ok");
-                    }
-                    item = item+1;
-                    resolve();
+         code = `${codeinit}_${item}`;
+        requestcall(path,code,req,codeinit).then(()=>{
+                shell.exec('npx cypress run', function(val, stdout, stderr) {
+                            fs.readdir(`${path}/cypress/report/s3`,function(err, items) {
+                                let file;
+                                for(i=0;i<items.length;i++){
+                                    if(items[i].includes('html')){
+                                        file = items[i];
+                                        break;
+                                    }
+                                }
+                                const content = fs.readFileSync(`${path}/cypress/report/s3/${file}`);
+                                s3.saveFileToS3(`${code}`,content,()=>{ 
+                                    for(i=0;i<items.length;i++){
+                                        if(items[i].includes('html')){
+                                            fs.unlinkSync(`${path}/cypress/report/s3/${items[i]}`);
+                                        }
+                                    }
+                                    if(item == itemsEx){
+                                        success("ok");
+                                    }else{
+                                    item = item+1;
+                                    resolve();
+                                    }
+                                });
+                            });
                 });
             });
         }))
@@ -36,22 +58,22 @@ module.exports.generateDynamicData = function(req,success,error){
     
 }
 
-function requestGeneral(){
-    requestcall().then(()=>{
-        shell.exec('npx cypress run', function(code, stdout, stderr) {
-            item++;
-            return item;
-        });
-    })
-}
    
-    function requestcall() {
-        return new Promise(function(resolve, reject) {
+    function requestcall(path_project,code,req,codeinit) {
+       return new Promise(function(resolve, reject) {
             request('http://my.api.mockaroo.com/users/1.json?key=ec487890', function (error, response, body) {
                 console.log(body);
-            fs.writeFile(`/Users/adrianabonilla/Documents/andes/pruebas/project/workerWebCypress/app/data.json`, body, function (err) {
-              console.log("antes")
-              resolve("ok");
+            fs.writeFile(`${path_project}/app/data.json`, body, function (err) {
+                let insert = "INSERT INTO `hangover`.`EXECUTION_TESTS` (`code`, `id_application`, `type_application_name`, `level_name`, `type_name`, `type_execution_name`, `number_executions`, `execution_time`, `repetitions`, `status`,`parent`)" 
+                            +  "VALUES ('" + `${code}` + "', '" + req.aplication + "', '" + req.typeAplication + "', '" + req.level + "', '" + req.type + "', '" + req.subType + "', '" + req.numberExecution + "', '" + req.executionTime + "', '" + req.repetitions + "', '" + req.status + "','" + codeinit + "');";
+                        console.log(insert);
+                        db.query(insert, (err, result) => {
+                            if (err) throw error;
+                            s3.saveFileToS3(`${code}_semilla`,body,()=>{ 
+                                console.log('Archivo creado en S3 json data: ',`${code}_semilla`);
+                                resolve("ok");
+                            });
+                        });
             
             }); 
        
@@ -59,55 +81,3 @@ function requestGeneral(){
         });
         
     }
-
-//     http.get('http://my.api.mockaroo.com/users/1.json?key=ec487890', (res) => {
-//   const { statusCode } = res;
-//   const contentType = res.headers['content-type'];
-
-//   let error;
-//   if (statusCode !== 200) {
-//     error = new Error('Request Failed.\n' +
-//                       `Status Code: ${statusCode}`);
-//   } else if (!/^application\/json/.test(contentType)) {
-//     error = new Error('Invalid content-type.\n' +
-//                       `Expected application/json but received ${contentType}`);
-//   }
-//   if (error) {
-//     console.error(error.message);
-//     // Consume response data to free up memory
-//     res.resume();
-//     return;
-//   }
-
-//   res.setEncoding('utf8');
-//   let rawData = '';
-//   res.on('data', (chunk) => { rawData += chunk; });
-//   res.on('end', () => {
-//     try {
-//       const parsedData = JSON.parse(rawData);
-//       console.log(parsedData);
-//     } catch (e) {
-//       console.error(e.message);
-//     }
-//   });
-// }).on('error', (e) => {
-//   console.error(`Got error: ${e.message}`);
-// });
-
-    // http.get('http://my.api.mockaroo.com/users/1.json?key=ec487890', function(res){
-    //     var body = '';
-    
-    //     res.on('data', function(chunk){
-    //         body += chunk;
-    //     });
-    //     console.log(JSON.stringify("......"+body))
-    //     res.on('end', function(){
-    //         var fbResponse = JSON.parse(body);
-    //         console.log("Got a response: ", fbResponse.picture);
-    //     });
-    // }).on('error', function(e){
-    //       console.log("Got an error: ", e);
-    // });
-        
-
-

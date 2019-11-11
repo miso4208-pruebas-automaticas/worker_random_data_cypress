@@ -3,26 +3,28 @@ var express = require('express')
 var router = express.Router();
 var cypressService = require('../services/cypress.srv.js');
 var http = require('http');
+var cron = require('node-cron'); // CAMBIO:ADICIONAR DEPENDENCIA
+var sqs = require('../../worker-sqs/sqs.js') //CAMBIO: ADICIONAR DEPENDENCIA
 
-router.post('/cypress_random_data',function(req,res){
+const execute = () => {
+    sqs.getSqs(function(apps){
+        console.log("Ejecucion cypress mockaro test");
+    });
+  }
+  
+var task = cron.schedule('* * * * *', execute, {scheduled:true});
+router.get('/start', (req,res) => {
+    execute();
+    task.start();
+    res.send('Cron iniciado')
     
-    console.log("data: "+ JSON.stringify(req.body))
-    
-    let data={
-        'items' : req.body.items
-    }
+  })
 
-    cypressService.generateDynamicData(data,function(apps){
-        res.statusCode = 200;
-        res.send({ status: "OK", data:apps });
-    },function(err){
-        res.statusCode = 404;
-        res.send(err);
 
-    })
-
-    return res;
-});
-
+  
+router.get('/stop', (req,res) => {
+    task.stop()
+    res.send('Worker detenido')
+  })
 
 module.exports = router;
